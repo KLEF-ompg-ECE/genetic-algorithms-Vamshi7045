@@ -89,8 +89,10 @@ def run_ga(
         for _ in range(population_size)
     ]
 
-    best_chromosome = None
-    best_value = -1
+    # ✅ FIX: Initialize properly
+    best_chromosome = population[0][:]
+    best_value = fitness(best_chromosome)
+
     value_log = []
 
     for _ in range(generations):
@@ -103,6 +105,7 @@ def run_ga(
 
         value_log.append(best_value)
 
+        # Elitism
         next_gen = [best_chromosome[:]]
         while len(next_gen) < population_size:
             p1 = tournament_select(population, fitnesses, tournament_size)
@@ -158,11 +161,7 @@ if __name__ == "__main__":
     print("  EXPERIMENT 1 - Baseline")
     print("=" * 48)
 
-    best_chr, best_val, val_log = run_ga(
-        population_size=20, generations=50,
-        crossover_rate=0.8, mutation_rate=0.05,
-        tournament_size=3, seed=42
-    )
+    best_chr, best_val, val_log = run_ga()
 
     print_solution(best_chr)
     print(f"  Generations run : {len(val_log)}")
@@ -174,29 +173,9 @@ if __name__ == "__main__":
 
     # EXPERIMENT 2
 
-    chr2, val2, vl2 = run_ga(
-        population_size=20, generations=50,
-        crossover_rate=0.8, mutation_rate=0.01,
-        tournament_size=3, seed=42
-    )
-    print_solution(chr2)
-    print(f"  Final best value: {val2}")
-    save_plot(vl2, "plots/experiment_2a.png", "mutation_rate=0.01")
-
-    chr2, val2, vl2 = run_ga(
-        population_size=20, generations=50,
-        crossover_rate=0.8, mutation_rate=0.05,
-        tournament_size=3, seed=42
-    )
-    print_solution(chr2)
-    print(f"  Final best value: {val2}")
-    save_plot(vl2, "plots/experiment_2b.png", "mutation_rate=0.05")
-
-    chr2, val2, vl2 = run_ga(
-        population_size=20, generations=50,
-        crossover_rate=0.8, mutation_rate=0.30,
-        tournament_size=3, seed=42
-    )
-    print_solution(chr2)
-    print(f"  Final best value: {val2}")
-    save_plot(vl2, "plots/experiment_2c.png", "mutation_rate=0.30")
+    for rate, name in [(0.01, "2a"), (0.05, "2b"), (0.30, "2c")]:
+        chr2, val2, vl2 = run_ga(mutation_rate=rate)
+        print_solution(chr2)
+        print(f"  Final best value: {val2}")
+        save_plot(vl2, f"plots/experiment_{name}.png",
+                  f"mutation_rate={rate}")
