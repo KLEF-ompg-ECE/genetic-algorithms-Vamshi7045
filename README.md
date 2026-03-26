@@ -120,3 +120,6 @@ Mutation rate is important in Genetic Algorithms. Low mutation causes early conv
 - [x] Experiment 2 completed
 - [x] Summary completed
 - [x] plots/ contains all required images
+## Section C
+
+Mutation rate is important in Genetic Algorithms. Low mutation causes early convergence. Moderate mutation gives stable results. High mutation increases exploration.
